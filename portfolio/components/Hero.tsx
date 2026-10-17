@@ -140,16 +140,16 @@ export default function Hero() {
                   className="absolute -inset-[150%] bg-[conic-gradient(from_0deg,#6366f1,#22d3ee,#a855f7,#38bdf8,#6366f1)]"
                 />
 
-                {/* Inner Squircle Container - Reduced size and properly framed */}
-                {/* Inner Squircle Container - Reduced size and properly framed */}
-                <div className="relative w-64 h-64 sm:w-60 sm:h-60 lg:w-72 lg:h-72 rounded-[2rem] sm:rounded-[2.6rem] overflow-hidden bg-slate-950 border border-white/20 dark:border-white/10">
+                {/* Inner Squircle Container */}
+                <div className="relative w-56 h-56 sm:w-64 sm:h-64 lg:w-72 lg:h-72 rounded-[2rem] sm:rounded-[2.6rem] overflow-hidden bg-slate-950 border border-white/20 dark:border-white/10 flex items-center justify-center">
                   <Image
                     src={personalInfo.profileImage}
                     alt={personalInfo.name}
-                    fill
+                    width={288}
+                    height={288}
                     priority
-                    sizes="(max-width: 639px) 208px, (max-width: 1200px) 240px, 288px"
-                    className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
+                    unoptimized
+                    className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
                   />
                   
                   {/* Subtle vignette lighting overlay */}

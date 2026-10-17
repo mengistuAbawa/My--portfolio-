@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Mail, Send, Github, ArrowUpRight } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
+import Logo from "./Logo";
 import { personalInfo, navLinks } from "@/lib/data";
 
 export default function Header() {
@@ -34,19 +35,7 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href="/#home" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 via-indigo-600 to-accent-400 flex items-center justify-center text-white font-mono font-bold text-xl shadow-md shadow-brand-500/30 group-hover:scale-105 transition-transform duration-300">
-              MA
-            </div>
-            <div className="flex flex-col">
-              <span className="font-bold text-lg tracking-tight text-slate-900 dark:text-white group-hover:text-brand-500 dark:group-hover:text-accent-400 transition-colors">
-                {personalInfo.name}
-              </span>
-              <span className="text-xs font-mono text-slate-500 dark:text-slate-400 hidden sm:inline-block">
-                {personalInfo.role}
-              </span>
-            </div>
-          </Link>
+          <Logo />
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-1 lg:gap-2 bg-slate-100/60 dark:bg-slate-900/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-200/50 dark:border-white/10">
