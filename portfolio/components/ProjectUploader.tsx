@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, AlertCircle, Loader2, ArrowLeft, Send } from "lucide-react";
+import { CheckCircle2, AlertCircle, Loader2, ArrowLeft, Send, ImagePlus, LogOut } from "lucide-react";
 import Link from "next/link";
 
 const projectSchema = z.object({
@@ -29,6 +29,12 @@ type ProjectFormData = {
 export default function ProjectUploader() {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
+  const [authenticated, setAuthenticated] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+  const [password, setPassword] = useState("");
+  const [authError, setAuthError] = useState("");
+  const [profileFile, setProfileFile] = useState<File | null>(null);
+  const [savingImage, setSavingImage] = useState(false);
   const [toast, setToast] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
   const {
@@ -47,6 +53,83 @@ export default function ProjectUploader() {
       liveUrl: "",
     },
   });
+
+  useEffect(() => {
+    fetch("/api/admin/session", { cache: "no-store" })
+      .then((response) => response.json())
+      .then((data: { authenticated?: boolean }) => setAuthenticated(Boolean(data.authenticated)))
+      .catch(() => setAuthError("Could not check admin login."))
+      .finally(() => setCheckingAuth(false));
+  }, []);
+
+  const login = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setAuthError("");
+    const response = await fetch("/api/admin/login", {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ password }),
+    });
+    const data = await response.json();
+    if (!response.ok) { setAuthError(data.error || "Sign in failed."); return; }
+    setPassword("");
+    setAuthenticated(true);
+  };
+
+  const saveProfileImage = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!profileFile) return;
+    setSavingImage(true);
+    setToast(null);
+    try {
+      const image = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => typeof reader.result === "string" ? resolve(reader.result) : reject(new Error("Could not read image."));
+        reader.onerror = () => reject(new Error("Could not read image."));
+        reader.readAsDataURL(profileFile);
+      });
+      const response = await fetch("/api/profile-image", {
+        method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ image }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Could not save image.");
+      setToast({ type: "success", message: "Home profile image updated." });
+      setProfileFile(null);
+      router.refresh();
+    } catch (err) {
+      setToast({ type: "error", message: err instanceof Error ? err.message : "Could not save image." });
+    } finally {
+      setSavingImage(false);
+    }
+  };
+
+  const logout = async () => {
+    await fetch("/api/admin/logout", { method: "POST" });
+    setAuthenticated(false);
+  };
+
+  if (checkingAuth) return <div className="glass-panel p-8 rounded-3xl text-center text-slate-600 dark:text-slate-300">Checking admin access…</div>;
+
+  if (!authenticated) {
+    const params = new URLSearchParams(typeof window === "undefined" ? "" : window.location.search);
+    const googleMessage = params.get("authError") === "google-not-configured"
+      ? "Google sign-in needs GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET configured on the server."
+      : params.get("authError") === "not-admin"
+        ? "That Google account is not authorized to manage this site."
+        : params.get("authError") ? "Google sign-in failed. Please try again." : "";
+    return (
+      <div className="glass-panel p-6 sm:p-10 rounded-3xl border border-slate-200/80 dark:border-white/10 shadow-2xl max-w-lg mx-auto">
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Admin sign in</h1>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-2 mb-6">Sign in to update the home image or publish projects.</p>
+        {(authError || googleMessage) && <p role="alert" className="mb-4 text-sm text-rose-500">{authError || googleMessage}</p>}
+        <form onSubmit={login} className="space-y-4">
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor="admin-password">Admin password</label>
+          <input id="admin-password" type="password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} required className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white" />
+          <button className="w-full rounded-xl px-4 py-3 font-semibold text-white bg-gradient-to-r from-brand-500 to-indigo-600">Sign in with password</button>
+        </form>
+        <div className="my-5 text-center text-xs text-slate-400">OR</div>
+        <a href="/api/admin/google" className="w-full inline-flex justify-center rounded-xl px-4 py-3 font-semibold border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800">Continue with Google</a>
+      </div>
+    );
+  }
 
   const onSubmit = async (data: ProjectFormData) => {
     // Validate with Zod
@@ -102,6 +185,13 @@ export default function ProjectUploader() {
 
   return (
     <div className="w-full max-w-2xl mx-auto">
+      <div className="mb-6 flex items-center justify-between rounded-2xl border border-slate-200/80 dark:border-white/10 glass-panel px-4 py-3">
+        <span className="text-sm font-medium text-emerald-600 dark:text-emerald-400">Admin session active</span>
+        <button type="button" onClick={logout} className="inline-flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300 hover:text-rose-500">
+          <LogOut className="w-4 h-4" /> Sign out
+        </button>
+      </div>
+
       {/* Toast Notification */}
       <AnimatePresence>
         {toast && (
@@ -124,6 +214,18 @@ export default function ProjectUploader() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <form onSubmit={saveProfileImage} className="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-white/10 shadow-xl mb-6">
+        <h2 className="text-xl font-bold text-slate-900 dark:text-white">Update home profile image</h2>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 mb-5">Upload a JPEG, PNG, WebP, or GIF image up to 2 MB.</p>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" onChange={(event) => setProfileFile(event.target.files?.[0] ?? null)} required className="min-w-0 flex-1 text-sm text-slate-600 dark:text-slate-300 file:mr-4 file:rounded-lg file:border-0 file:bg-brand-500/10 file:px-4 file:py-2 file:font-semibold file:text-brand-600 dark:file:text-accent-300" />
+          <button type="submit" disabled={!profileFile || savingImage} className="inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold text-white bg-gradient-to-r from-brand-500 to-indigo-600 disabled:opacity-50">
+            {savingImage ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImagePlus className="w-4 h-4" />}
+            {savingImage ? "Saving image…" : "Update home image"}
+          </button>
+        </div>
+      </form>
 
       {/* Form Container */}
       <div className="glass-panel p-6 sm:p-10 rounded-3xl border border-slate-200/80 dark:border-white/10 shadow-2xl relative">

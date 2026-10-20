@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { initialProjects } from "@/lib/data";
 import { z } from "zod";
+import { isAdminAuthenticated } from "@/lib/admin-auth";
 
 const projectSchema = z.object({
   title: z.string().min(2, "Title must be at least 2 characters"),
@@ -49,6 +50,9 @@ export async function GET() {
 
 // POST /api/projects
 export async function POST(req: Request) {
+  if (!(await isAdminAuthenticated())) {
+    return NextResponse.json({ error: "Sign in as the site admin before publishing." }, { status: 401 });
+  }
   try {
     const body = await req.json();
     const validation = projectSchema.safeParse(body);
