@@ -118,7 +118,7 @@ export default function ProjectUploader() {
       ? "Set the Supabase project URL and publishable key in the deployment environment."
       : params.get("authError") === "not-admin"
         ? "That Google account is not authorized to manage this site."
-        : params.get("authError") ? "Google sign-in failed. Check the Google provider and redirect URL in Supabase Auth settings." : "";
+        : params.get("authError") ? "Google sign-in is unavailable. Enable the Google provider in Supabase Authentication > Sign In / Providers, or use password sign-in." : "";
     return (
       <div className="glass-panel p-6 sm:p-10 rounded-3xl border border-slate-200/80 dark:border-white/10 shadow-2xl max-w-lg mx-auto">
         <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Admin sign in</h1>

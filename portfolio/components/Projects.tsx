@@ -57,7 +57,7 @@ export default function Projects() {
     const authError = new URLSearchParams(window.location.search).get("authError");
     if (authError === "supabase-not-configured") setProjectActionError("Set the Supabase project URL and publishable key in the deployment environment.");
     else if (authError === "not-admin") setProjectActionError("Sign in with the authorized admin account.");
-    else if (authError === "google-sign-in") setProjectActionError("Google sign-in failed. Check the Google provider and redirect URL in Supabase Auth settings.");
+    else if (authError === "google-sign-in") setProjectActionError("Google sign-in is unavailable. Enable the Google provider in Supabase Authentication > Sign In / Providers, or use password sign-in.");
     fetch("/api/admin/session", { cache: "no-store" })
       .then((response) => response.json())
       .then((data: { authenticated?: boolean }) => {

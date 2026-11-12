@@ -1,6 +1,6 @@
 import { createSupabaseServerClient } from "@/lib/supabase-server";
 
-export const ADMIN_EMAIL = "mengistuabawa19@gmail.com";
+export const ADMIN_EMAIL = "mengistuabawa21@gmail.com";
 
 export async function isAdminAuthenticated() {
   try {
