@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ArrowUpRight } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import Logo from "./Logo";
 import { navLinks } from "@/lib/data";
@@ -51,17 +51,9 @@ export default function Header() {
             ))}
           </nav>
 
-          {/* Theme Toggle & Project Upload */}
+          {/* Theme Toggle */}
           <div className="hidden md:flex items-center gap-2 lg:gap-3">
             <ThemeToggle />
-
-            <Link
-              href="/upload"
-              className="hidden lg:inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-xl bg-gradient-to-r from-brand-500 to-indigo-600 hover:from-brand-600 hover:to-indigo-700 text-white shadow-sm shadow-brand-500/25 transition-all hover:scale-105"
-            >
-              Upload Project
-              <ArrowUpRight className="w-3.5 h-3.5" />
-            </Link>
           </div>
 
           {/* Mobile hamburger & ThemeToggle */}
@@ -100,13 +92,6 @@ export default function Header() {
                     {link.name}
                   </Link>
                 ))}
-                <Link
-                  href="/upload"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="px-3 py-2 text-base font-medium text-brand-600 dark:text-accent-400 rounded-lg bg-brand-50 dark:bg-brand-950/30 border border-brand-200 dark:border-brand-800/40"
-                >
-                  Upload New Project
-                </Link>
               </nav>
             </div>
           </motion.div>

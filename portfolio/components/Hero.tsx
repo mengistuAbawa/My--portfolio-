@@ -5,20 +5,8 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Download, Mail, Sparkles, ArrowRight } from "lucide-react";
 import { personalInfo, heroStats } from "@/lib/data";
-import { useEffect, useState } from "react";
 
 export default function Hero() {
-  const [profileImage, setProfileImage] = useState(personalInfo.profileImage);
-
-  useEffect(() => {
-    fetch("/api/profile-image", { cache: "no-store" })
-      .then((response) => response.ok ? response.json() : null)
-      .then((data: { image?: string | null } | null) => {
-        if (data?.image) setProfileImage(data.image);
-      })
-      .catch(() => undefined);
-  }, []);
-
   return (
     <section
       id="home"
@@ -144,7 +132,7 @@ export default function Hero() {
                 {/* Inner Squircle Container */}
                 <div className="relative w-56 h-56 sm:w-64 sm:h-64 lg:w-72 lg:h-72 rounded-[2rem] sm:rounded-[2.6rem] overflow-hidden bg-slate-950 border border-white/20 dark:border-white/10 flex items-center justify-center">
                   <Image
-                    src={profileImage}
+                    src={personalInfo.profileImage}
                     alt={personalInfo.name}
                     width={288}
                     height={288}

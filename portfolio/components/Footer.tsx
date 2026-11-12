@@ -92,14 +92,6 @@ export default function Footer() {
                   </Link>
                 </li>
               ))}
-              <li>
-                <Link
-                  href="/upload"
-                  className="text-brand-600 dark:text-accent-400 font-medium hover:underline"
-                >
-                  Upload Project
-                </Link>
-              </li>
             </ul>
           </div>
 
