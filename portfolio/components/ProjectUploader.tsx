@@ -13,7 +13,7 @@ const projectSchema = z.object({
   description: z.string().min(10, "Description must be at least 10 characters"),
   tech: z.string().min(2, "Tech stack is required (comma-separated)"),
   imageUrl: z.string().url("Must be a valid cover image URL (e.g. https://images.unsplash.com/...)"),
-  githubUrl: z.string().url("Must be a valid GitHub URL (e.g. https://github.com/...)"),
+  githubUrl: z.string().url("Must be a valid GitHub URL (e.g. https://github.com/...)").or(z.literal("")),
   liveUrl: z.string().url("Must be a valid Live demo URL (e.g. https://...)"),
 });
 
@@ -65,13 +65,17 @@ export default function ProjectUploader() {
   const login = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setAuthError("");
-    const response = await fetch("/api/admin/login", {
-      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ password }),
-    });
-    const data = await response.json();
-    if (!response.ok) { setAuthError(data.error || "Sign in failed."); return; }
-    setPassword("");
-    setAuthenticated(true);
+    try {
+      const response = await fetch("/api/admin/login", {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ password }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Sign in failed.");
+      setPassword("");
+      setAuthenticated(true);
+    } catch (error) {
+      setAuthError(error instanceof Error ? error.message : "Sign in failed. Please try again.");
+    }
   };
 
   const saveProfileImage = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -110,15 +114,15 @@ export default function ProjectUploader() {
 
   if (!authenticated) {
     const params = new URLSearchParams(typeof window === "undefined" ? "" : window.location.search);
-    const googleMessage = params.get("authError") === "google-not-configured"
-      ? "Google sign-in needs GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET configured on the server."
+    const googleMessage = params.get("authError") === "supabase-not-configured"
+      ? "Set the Supabase project URL and publishable key in the deployment environment."
       : params.get("authError") === "not-admin"
         ? "That Google account is not authorized to manage this site."
-        : params.get("authError") ? "Google sign-in failed. Please try again." : "";
+        : params.get("authError") ? "Google sign-in failed. Check the Google provider and redirect URL in Supabase Auth settings." : "";
     return (
       <div className="glass-panel p-6 sm:p-10 rounded-3xl border border-slate-200/80 dark:border-white/10 shadow-2xl max-w-lg mx-auto">
         <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Admin sign in</h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400 mt-2 mb-6">Sign in to update the home image or publish projects.</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-2 mb-6">Sign in with the portfolio admin account to update the home image or publish projects.</p>
         {(authError || googleMessage) && <p role="alert" className="mb-4 text-sm text-rose-500">{authError || googleMessage}</p>}
         <form onSubmit={login} className="space-y-4">
           <label className="block text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor="admin-password">Admin password</label>
@@ -219,7 +223,8 @@ export default function ProjectUploader() {
         <h2 className="text-xl font-bold text-slate-900 dark:text-white">Update home profile image</h2>
         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 mb-5">Upload a JPEG, PNG, WebP, or GIF image up to 2 MB.</p>
         <div className="flex flex-col sm:flex-row gap-3">
-          <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" onChange={(event) => setProfileFile(event.target.files?.[0] ?? null)} required className="min-w-0 flex-1 text-sm text-slate-600 dark:text-slate-300 file:mr-4 file:rounded-lg file:border-0 file:bg-brand-500/10 file:px-4 file:py-2 file:font-semibold file:text-brand-600 dark:file:text-accent-300" />
+          <label htmlFor="profile-image-file" className="sr-only">Choose a home profile image</label>
+          <input id="profile-image-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif" onChange={(event) => setProfileFile(event.target.files?.[0] ?? null)} required className="min-w-0 flex-1 text-sm text-slate-600 dark:text-slate-300 file:mr-4 file:rounded-lg file:border-0 file:bg-brand-500/10 file:px-4 file:py-2 file:font-semibold file:text-brand-600 dark:file:text-accent-300" />
           <button type="submit" disabled={!profileFile || savingImage} className="inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold text-white bg-gradient-to-r from-brand-500 to-indigo-600 disabled:opacity-50">
             {savingImage ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImagePlus className="w-4 h-4" />}
             {savingImage ? "Saving image…" : "Update home image"}
@@ -235,7 +240,7 @@ export default function ProjectUploader() {
               Add New Project
             </h1>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              Store a project in SQLite via Prisma and showcase it live
+              Save a project to the configured portfolio database and showcase it live
             </p>
           </div>
           <Link
@@ -250,11 +255,13 @@ export default function ProjectUploader() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           {/* Title */}
           <div>
-            <label className="block text-xs font-mono font-semibold uppercase text-slate-700 dark:text-slate-300 mb-1.5">
+            <label htmlFor="project-title" className="block text-xs font-mono font-semibold uppercase text-slate-700 dark:text-slate-300 mb-1.5">
               Project Title *
             </label>
             <input
+              id="project-title"
               type="text"
+              autoComplete="off"
               placeholder="e.g. AI-Powered SaaS Content Generator"
               {...register("title", { required: "Project title is required" })}
               className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm transition-all"
@@ -266,11 +273,13 @@ export default function ProjectUploader() {
 
           {/* Description */}
           <div>
-            <label className="block text-xs font-mono font-semibold uppercase text-slate-700 dark:text-slate-300 mb-1.5">
+            <label htmlFor="project-description" className="block text-xs font-mono font-semibold uppercase text-slate-700 dark:text-slate-300 mb-1.5">
               Description *
             </label>
             <textarea
+              id="project-description"
               rows={3}
+              autoComplete="off"
               placeholder="Brief summary of architecture, features, and technical value..."
               {...register("description", { required: "Description is required" })}
               className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm transition-all resize-none"
@@ -282,11 +291,13 @@ export default function ProjectUploader() {
 
           {/* Tech Stack */}
           <div>
-            <label className="block text-xs font-mono font-semibold uppercase text-slate-700 dark:text-slate-300 mb-1.5">
+            <label htmlFor="project-tech" className="block text-xs font-mono font-semibold uppercase text-slate-700 dark:text-slate-300 mb-1.5">
               Technologies (comma-separated) *
             </label>
             <input
+              id="project-tech"
               type="text"
+              autoComplete="off"
               placeholder="Next.js 14, TypeScript, TailwindCSS, Prisma, SQLite"
               {...register("tech", { required: "Tech stack is required" })}
               className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm transition-all"
@@ -298,11 +309,13 @@ export default function ProjectUploader() {
 
           {/* Image URL */}
           <div>
-            <label className="block text-xs font-mono font-semibold uppercase text-slate-700 dark:text-slate-300 mb-1.5">
+            <label htmlFor="project-image-url" className="block text-xs font-mono font-semibold uppercase text-slate-700 dark:text-slate-300 mb-1.5">
               Cover Image URL *
             </label>
             <input
+              id="project-image-url"
               type="url"
+              autoComplete="url"
               placeholder="https://images.unsplash.com/photo-..."
               {...register("imageUrl", { required: "Image URL is required" })}
               className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm transition-all"
@@ -315,13 +328,15 @@ export default function ProjectUploader() {
           {/* URLs row */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-mono font-semibold uppercase text-slate-700 dark:text-slate-300 mb-1.5">
-                GitHub Repository URL *
+              <label htmlFor="project-github-url" className="block text-xs font-mono font-semibold uppercase text-slate-700 dark:text-slate-300 mb-1.5">
+                GitHub Repository URL (optional)
               </label>
               <input
+                id="project-github-url"
                 type="url"
+                autoComplete="url"
                 placeholder="https://github.com/..."
-                {...register("githubUrl", { required: "GitHub URL is required" })}
+                {...register("githubUrl")}
                 className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm transition-all"
               />
               {errors.githubUrl && (
@@ -330,11 +345,13 @@ export default function ProjectUploader() {
             </div>
 
             <div>
-              <label className="block text-xs font-mono font-semibold uppercase text-slate-700 dark:text-slate-300 mb-1.5">
+              <label htmlFor="project-live-url" className="block text-xs font-mono font-semibold uppercase text-slate-700 dark:text-slate-300 mb-1.5">
                 Live Demo URL *
               </label>
               <input
+                id="project-live-url"
                 type="url"
+                autoComplete="url"
                 placeholder="https://yourproject.com"
                 {...register("liveUrl", { required: "Live URL is required" })}
                 className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm transition-all"
@@ -355,7 +372,7 @@ export default function ProjectUploader() {
               {submitting ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  Saving to SQLite...
+                  Publishing project...
                 </>
               ) : (
                 <>

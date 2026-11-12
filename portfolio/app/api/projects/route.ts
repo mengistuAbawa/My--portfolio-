@@ -9,7 +9,7 @@ const projectSchema = z.object({
   description: z.string().min(10, "Description must be at least 10 characters"),
   tech: z.string().min(2, "Tech stack is required (comma-separated)"),
   imageUrl: z.string().url("Must be a valid image URL"),
-  githubUrl: z.string().url("Must be a valid GitHub URL"),
+  githubUrl: z.string().url("Must be a valid GitHub URL").or(z.literal("")),
   liveUrl: z.string().url("Must be a valid Live preview URL"),
 });
 

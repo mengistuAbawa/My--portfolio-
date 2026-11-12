@@ -54,6 +54,10 @@ export default function Projects() {
   useEffect(() => {
     setPortalReady(true);
     fetchProjects();
+    const authError = new URLSearchParams(window.location.search).get("authError");
+    if (authError === "supabase-not-configured") setProjectActionError("Set the Supabase project URL and publishable key in the deployment environment.");
+    else if (authError === "not-admin") setProjectActionError("Sign in with the authorized admin account.");
+    else if (authError === "google-sign-in") setProjectActionError("Google sign-in failed. Check the Google provider and redirect URL in Supabase Auth settings.");
     fetch("/api/admin/session", { cache: "no-store" })
       .then((response) => response.json())
       .then((data: { authenticated?: boolean }) => {
@@ -303,9 +307,9 @@ export default function Projects() {
                     </p>
                   </div>
 
-                  {/* Tech stack tags */}
+                  {/* Project details */}
                   <div className="space-y-4 pt-2">
-                    <div className="flex flex-wrap gap-1.5">
+                    {techList.length > 0 && <div className="flex flex-wrap gap-1.5">
                       {techList.map((tag) => (
                         <span
                           key={tag}
@@ -314,25 +318,27 @@ export default function Projects() {
                           {tag}
                         </span>
                       ))}
-                    </div>
+                    </div>}
 
                     {/* Links Buttons */}
                     <div className="pt-4 border-t border-slate-100 dark:border-white/5 flex items-center justify-between gap-3">
-                      <a
-                        href={project.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1 inline-flex items-center justify-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-white transition-colors"
-                      >
-                        <Github className="w-3.5 h-3.5" />
-                        Code
-                      </a>
+                      {project.githubUrl && (
+                        <a
+                          href={project.githubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex-1 inline-flex items-center justify-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-white transition-colors"
+                        >
+                          <Github className="w-3.5 h-3.5" />
+                          Code
+                        </a>
+                      )}
 
                       <a
                         href={project.liveUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-1 inline-flex items-center justify-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-xl bg-brand-500 hover:bg-brand-600 text-white shadow-sm shadow-brand-500/25 transition-colors"
+                        className={`${project.githubUrl ? "flex-1" : "w-full"} inline-flex items-center justify-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-xl bg-brand-500 hover:bg-brand-600 text-white shadow-sm shadow-brand-500/25 transition-colors`}
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
                         Live Demo
@@ -383,9 +389,9 @@ export default function Projects() {
                 <label key={field} className="block text-sm font-medium text-slate-700 dark:text-slate-200">
                   {label}
                   {field === "description" ? (
-                    <textarea required minLength={10} rows={3} value={editingProject[field]} onChange={(event) => setEditingProject({ ...editingProject, [field]: event.target.value })} className="mt-1 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 px-4 py-3 text-slate-900 dark:text-white" />
+                    <textarea autoComplete="off" required minLength={10} rows={3} value={editingProject[field]} onChange={(event) => setEditingProject({ ...editingProject, [field]: event.target.value })} className="mt-1 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 px-4 py-3 text-slate-900 dark:text-white" />
                   ) : (
-                    <input required minLength={field === "title" || field === "tech" ? 2 : undefined} type={field.endsWith("Url") ? "url" : "text"} value={editingProject[field]} onChange={(event) => setEditingProject({ ...editingProject, [field]: event.target.value })} className="mt-1 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 px-4 py-3 text-slate-900 dark:text-white" />
+                    <input autoComplete={field.endsWith("Url") ? "url" : "off"} required={field !== "githubUrl"} minLength={field === "title" || field === "tech" ? 2 : undefined} type={field.endsWith("Url") ? "url" : "text"} value={editingProject[field]} onChange={(event) => setEditingProject({ ...editingProject, [field]: event.target.value })} className="mt-1 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 px-4 py-3 text-slate-900 dark:text-white" />
                   )}
                 </label>
               ))}

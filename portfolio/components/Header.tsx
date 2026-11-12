@@ -3,10 +3,10 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Mail, Send, Github, ArrowUpRight } from "lucide-react";
+import { Menu, X, ArrowUpRight } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import Logo from "./Logo";
-import { personalInfo, navLinks } from "@/lib/data";
+import { navLinks } from "@/lib/data";
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -51,38 +51,8 @@ export default function Header() {
             ))}
           </nav>
 
-          {/* Right Side Socials & Theme Toggle */}
+          {/* Theme Toggle & Project Upload */}
           <div className="hidden md:flex items-center gap-2 lg:gap-3">
-            <a
-              href={personalInfo.githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="GitHub Profile"
-              className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-brand-500 dark:hover:text-accent-400 hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-all"
-            >
-              <Github className="w-5 h-5" />
-            </a>
-
-            <a
-              href={personalInfo.telegramUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Telegram"
-              className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-brand-500 dark:hover:text-accent-400 hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-all"
-            >
-              <Send className="w-5 h-5" />
-            </a>
-
-            <a
-              href={`mailto:${personalInfo.email}`}
-              aria-label="Email"
-              className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-brand-500 dark:hover:text-accent-400 hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-all"
-            >
-              <Mail className="w-5 h-5" />
-            </a>
-
-            <div className="h-5 w-px bg-slate-300 dark:bg-slate-700 mx-1" />
-
             <ThemeToggle />
 
             <Link
@@ -138,34 +108,6 @@ export default function Header() {
                   Upload New Project
                 </Link>
               </nav>
-
-              <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-around text-slate-600 dark:text-slate-300">
-                <a
-                  href={personalInfo.githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2 text-sm"
-                >
-                  <Github className="w-5 h-5 text-brand-500" />
-                  GitHub
-                </a>
-                <a
-                  href={personalInfo.telegramUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2 text-sm"
-                >
-                  <Send className="w-5 h-5 text-accent-400" />
-                  Telegram
-                </a>
-                <a
-                  href={`mailto:${personalInfo.email}`}
-                  className="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2 text-sm"
-                >
-                  <Mail className="w-5 h-5 text-rose-500" />
-                  Email
-                </a>
-              </div>
             </div>
           </motion.div>
         )}

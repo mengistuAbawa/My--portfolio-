@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Download, Send, Mail, Sparkles, ArrowRight } from "lucide-react";
+import { Download, Mail, Sparkles, ArrowRight } from "lucide-react";
 import { personalInfo, heroStats } from "@/lib/data";
 import { useEffect, useState } from "react";
 
@@ -83,17 +83,6 @@ export default function Hero() {
                 Download CV
               </a>
 
-              {/* Hire Me (Telegram) */}
-              <a
-                href={personalInfo.telegramUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100 font-medium shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all"
-              >
-                <Send className="w-4 h-4 text-accent-400 dark:text-brand-600" />
-                Hire Me
-              </a>
-
               {/* Email */}
               <a
                 href={`mailto:${personalInfo.email}`}
@@ -111,7 +100,7 @@ export default function Hero() {
                 href="/#projects"
                 className="inline-flex items-center gap-1 font-semibold text-brand-600 dark:text-accent-400 hover:underline"
               >
-                View 5+ Projects
+                View 4 Featured Projects
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
@@ -213,14 +202,14 @@ export default function Hero() {
               >
                 <span className="text-[11px]">🏆</span>
                 <span className="text-[10px] font-bold font-mono text-brand-600 dark:text-accent-300">
-                  5+ Projects
+                  4 Featured Projects
                 </span>
               </motion.div>
             </div>
           </motion.div>
         </div>
 
-        {/* Stats Cards (5+ Projects, 3+ Years, 15+ Technologies, 100% Satisfaction) */}
+        {/* Highlighted project and engineering focus areas */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}

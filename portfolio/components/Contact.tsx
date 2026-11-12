@@ -310,13 +310,15 @@ export default function Contact() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Name */}
                 <div>
-                  <label className="block text-xs font-mono font-semibold uppercase text-slate-700 dark:text-slate-300 mb-1.5 flex items-center gap-1.5">
+                  <label htmlFor="contact-name" className="block text-xs font-mono font-semibold uppercase text-slate-700 dark:text-slate-300 mb-1.5 flex items-center gap-1.5">
                     <User className="w-3.5 h-3.5 text-brand-500" />
                     Your Name *
                   </label>
                   <input
+                    id="contact-name"
                     type="text"
                     name="name"
+                    autoComplete="name"
                     value={formData.name}
                     onChange={handleChange}
                     required
@@ -327,13 +329,15 @@ export default function Contact() {
 
                 {/* Email */}
                 <div>
-                  <label className="block text-xs font-mono font-semibold uppercase text-slate-700 dark:text-slate-300 mb-1.5 flex items-center gap-1.5">
+                  <label htmlFor="contact-email" className="block text-xs font-mono font-semibold uppercase text-slate-700 dark:text-slate-300 mb-1.5 flex items-center gap-1.5">
                     <Mail className="w-3.5 h-3.5 text-accent-400" />
                     Your Email *
                   </label>
                   <input
+                    id="contact-email"
                     type="email"
                     name="email"
+                    autoComplete="email"
                     value={formData.email}
                     onChange={handleChange}
                     required
@@ -345,13 +349,15 @@ export default function Contact() {
 
               {/* Subject */}
               <div>
-                <label className="block text-xs font-mono font-semibold uppercase text-slate-700 dark:text-slate-300 mb-1.5 flex items-center gap-1.5">
+                <label htmlFor="contact-subject" className="block text-xs font-mono font-semibold uppercase text-slate-700 dark:text-slate-300 mb-1.5 flex items-center gap-1.5">
                   <FileText className="w-3.5 h-3.5 text-indigo-500" />
                   Subject
                 </label>
                 <input
+                  id="contact-subject"
                   type="text"
                   name="subject"
+                  autoComplete="off"
                   value={formData.subject}
                   onChange={handleChange}
                   placeholder="e.g. Full-Stack Web Development Project / Consultation"
@@ -362,7 +368,7 @@ export default function Contact() {
               {/* Message (Textarea) */}
               <div>
                 <div className="flex justify-between items-center mb-1.5">
-                  <label className="block text-xs font-mono font-semibold uppercase text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                  <label htmlFor="contact-message" className="block text-xs font-mono font-semibold uppercase text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
                     <MessageSquare className="w-3.5 h-3.5 text-brand-500" />
                     Message *
                   </label>
@@ -371,7 +377,9 @@ export default function Contact() {
                   </span>
                 </div>
                 <textarea
+                  id="contact-message"
                   name="message"
+                  autoComplete="off"
                   value={formData.message}
                   onChange={handleChange}
                   required

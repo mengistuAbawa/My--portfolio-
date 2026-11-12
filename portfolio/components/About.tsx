@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Code2, FolderGit2, Users2, Sparkles, CheckCircle2 } from "lucide-react";
 import { personalInfo, aboutFeatures } from "@/lib/data";
@@ -35,9 +36,9 @@ export default function About() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white"
           >
-            Passionate Developer Building{" "}
+            Building Thoughtful{" "}
             <span className="bg-gradient-to-r from-brand-500 to-accent-400 bg-clip-text text-transparent">
-              Scalable Solutions
+              Digital Products
             </span>
           </motion.h2>
 
@@ -48,9 +49,53 @@ export default function About() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="mt-6 text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed"
           >
-            {personalInfo.bio} I specialize in combining front-end finesse with dependable back-end engineering, producing apps that load instantly, scale effortlessly, and delight end users.
+            I care about turning everyday challenges into useful, approachable software.
           </motion.p>
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="max-w-5xl mx-auto mb-16 grid md:grid-cols-[0.8fr_1.2fr] gap-8 md:gap-12 items-center"
+        >
+          <div className="relative mx-auto w-full max-w-sm">
+            <div className="absolute -inset-3 rounded-[2rem] bg-gradient-to-br from-brand-500/30 via-indigo-500/20 to-accent-400/30 blur-xl" />
+            <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-slate-200/80 dark:border-white/10 bg-slate-100 dark:bg-slate-900 shadow-2xl">
+              <Image
+                src="/images/about.jpg"
+                alt={`${personalInfo.name}, ${personalInfo.role}`}
+                fill
+                sizes="(max-width: 768px) 90vw, 320px"
+                className="object-cover object-top"
+              />
+            </div>
+            <div className="absolute -bottom-4 -right-3 rounded-2xl glass-panel px-4 py-3 shadow-xl">
+              <span className="block text-xs font-mono uppercase tracking-wider text-slate-500 dark:text-slate-400">Role</span>
+              <span className="text-sm font-bold text-slate-900 dark:text-white">{personalInfo.role}</span>
+            </div>
+          </div>
+
+          <div className="glass-panel rounded-3xl p-7 sm:p-9 border border-slate-200/80 dark:border-white/10">
+            <span className="text-xs font-mono font-semibold uppercase tracking-[0.18em] text-brand-600 dark:text-accent-400">
+              A little about me
+            </span>
+            <h3 className="mt-3 text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+              Hello, I&apos;m {personalInfo.name}.
+            </h3>
+            <p className="mt-4 text-base leading-relaxed text-slate-600 dark:text-slate-300">
+              {personalInfo.bio}
+            </p>
+            <div className="mt-6 flex flex-wrap gap-2">
+              {["Full-stack development", "Product thinking", "Accessible design"].map((item) => (
+                <span key={item} className="rounded-full border border-brand-200/80 dark:border-brand-800/60 bg-brand-50/80 dark:bg-brand-950/40 px-3 py-1.5 text-xs font-medium text-brand-700 dark:text-accent-300">
+                  {item}
+                </span>
+              ))}
+            </div>
+          </div>
+        </motion.div>
 
         {/* 4 Feature Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -84,7 +129,7 @@ export default function About() {
 
                 <div className="mt-4 pt-4 border-t border-slate-100 dark:border-white/5 flex items-center gap-2 text-xs font-medium text-brand-600 dark:text-accent-400 opacity-80 group-hover:opacity-100">
                   <CheckCircle2 className="w-3.5 h-3.5" />
-                  Verified Expertise
+                  Thoughtful by design
                 </div>
               </motion.div>
             );

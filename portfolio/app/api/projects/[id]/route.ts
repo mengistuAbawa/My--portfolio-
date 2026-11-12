@@ -8,7 +8,7 @@ const projectSchema = z.object({
   description: z.string().min(10),
   tech: z.string().min(2),
   imageUrl: z.string().url(),
-  githubUrl: z.string().url(),
+  githubUrl: z.string().url().or(z.literal("")),
   liveUrl: z.string().url(),
 });
 

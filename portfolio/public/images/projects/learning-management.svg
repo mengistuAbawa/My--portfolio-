@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" fill="none">
+  <defs>
+    <linearGradient id="background" x1="90" y1="20" x2="1110" y2="650" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F5F3FF"/>
+      <stop offset="1" stop-color="#EFF6FF"/>
+    </linearGradient>
+    <linearGradient id="purple" x1="300" y1="130" x2="1070" y2="568" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6D28D9"/>
+      <stop offset="1" stop-color="#4F46E5"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" rx="28" fill="url(#background)"/>
+  <rect x="60" y="42" width="1080" height="591" rx="22" fill="#fff" stroke="#E2E8F0"/>
+  <rect x="60" y="42" width="215" height="591" rx="22" fill="#FAFAFF"/>
+  <path d="M275 42h-12v591h12" fill="#FAFAFF"/>
+  <rect x="88" y="72" width="38" height="38" rx="13" fill="url(#purple)"/>
+  <path d="m97 84 10 5 10-5m-20 0v12l10 5 10-5V84" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
+  <text x="139" y="97" fill="#312E81" font-family="Arial,sans-serif" font-size="17" font-weight="700">LearnSpace</text>
+  <rect x="82" y="141" width="170" height="44" rx="12" fill="#EDE9FE"/>
+  <circle cx="105" cy="163" r="7" fill="#6D28D9"/>
+  <text x="124" y="168" fill="#5B21B6" font-family="Arial,sans-serif" font-size="13" font-weight="700">My learning</text>
+  <text x="104" y="218" fill="#94A3B8" font-family="Arial,sans-serif" font-size="11">LEARNING</text>
+  <circle cx="105" cy="249" r="5" fill="#A78BFA"/><text x="124" y="254" fill="#475569" font-family="Arial,sans-serif" font-size="13">My courses</text>
+  <circle cx="105" cy="289" r="5" fill="#A78BFA"/><text x="124" y="294" fill="#475569" font-family="Arial,sans-serif" font-size="13">Explore courses</text>
+  <circle cx="105" cy="329" r="5" fill="#A78BFA"/><text x="124" y="334" fill="#475569" font-family="Arial,sans-serif" font-size="13">Learning activity</text>
+  <circle cx="105" cy="369" r="5" fill="#A78BFA"/><text x="124" y="374" fill="#475569" font-family="Arial,sans-serif" font-size="13">Certificates</text>
+  <circle cx="105" cy="568" r="18" fill="#DDD6FE"/>
+  <text x="136" y="565" fill="#334155" font-family="Arial,sans-serif" font-size="12" font-weight="700">Your account</text>
+  <text x="136" y="583" fill="#64748B" font-family="Arial,sans-serif" font-size="11">Learner workspace</text>
+  <text x="307" y="98" fill="#0F172A" font-family="Arial,sans-serif" font-size="24" font-weight="700">Keep learning, one step at a time</text>
+  <text x="307" y="126" fill="#64748B" font-family="Arial,sans-serif" font-size="13">Pick up where you left off or explore something new.</text>
+  <rect x="307" y="154" width="778" height="143" rx="18" fill="url(#purple)"/>
+  <circle cx="1003" cy="187" r="53" fill="#fff" opacity=".12"/>
+  <circle cx="1045" cy="267" r="74" fill="#fff" opacity=".08"/>
+  <text x="338" y="193" fill="#DDD6FE" font-family="Arial,sans-serif" font-size="12" font-weight="700" letter-spacing="1">YOUR NEXT LESSON</text>
+  <text x="338" y="229" fill="#fff" font-family="Arial,sans-serif" font-size="22" font-weight="700">Introduction to Web Development</text>
+  <text x="338" y="254" fill="#E0E7FF" font-family="Arial,sans-serif" font-size="12">Continue your course and build your next skill.</text>
+  <rect x="338" y="267" width="143" height="16" rx="8" fill="#fff" opacity=".2"/>
+  <rect x="338" y="267" width="86" height="16" rx="8" fill="#A7F3D0"/>
+  <rect x="890" y="224" width="145" height="43" rx="12" fill="#fff"/>
+  <text x="916" y="251" fill="#5B21B6" font-family="Arial,sans-serif" font-size="12" font-weight="700">Continue course</text>
+  <text x="307" y="343" fill="#0F172A" font-family="Arial,sans-serif" font-size="17" font-weight="700">Your courses</text>
+  <text x="1008" y="343" fill="#6D28D9" font-family="Arial,sans-serif" font-size="12" font-weight="700">Browse all</text>
+  <rect x="307" y="362" width="244" height="220" rx="16" fill="#fff" stroke="#E2E8F0"/>
+  <rect x="323" y="378" width="212" height="102" rx="12" fill="#DBEAFE"/>
+  <circle cx="428" cy="429" r="31" fill="#BFDBFE"/>
+  <path d="m416 412 28 17-28 17v-34Z" fill="#2563EB"/>
+  <text x="325" y="509" fill="#0F172A" font-family="Arial,sans-serif" font-size="13" font-weight="700">Web Development</text>
+  <text x="325" y="531" fill="#64748B" font-family="Arial,sans-serif" font-size="11">8 lessons  ·  4h 20m</text>
+  <rect x="325" y="548" width="202" height="7" rx="3.5" fill="#E2E8F0"/>
+  <rect x="325" y="548" width="108" height="7" rx="3.5" fill="#6366F1"/>
+  <rect x="572" y="362" width="244" height="220" rx="16" fill="#fff" stroke="#E2E8F0"/>
+  <rect x="588" y="378" width="212" height="102" rx="12" fill="#FEF3C7"/>
+  <circle cx="694" cy="429" r="31" fill="#FDE68A"/>
+  <path d="M680 443h28m-24-7h20m-16-7h12m-8-7h4" stroke="#B45309" stroke-width="3" stroke-linecap="round"/>
+  <text x="590" y="509" fill="#0F172A" font-family="Arial,sans-serif" font-size="13" font-weight="700">Digital Study Skills</text>
+  <text x="590" y="531" fill="#64748B" font-family="Arial,sans-serif" font-size="11">6 lessons  ·  2h 10m</text>
+  <rect x="590" y="548" width="202" height="7" rx="3.5" fill="#E2E8F0"/>
+  <rect x="590" y="548" width="149" height="7" rx="3.5" fill="#F59E0B"/>
+  <rect x="837" y="362" width="248" height="220" rx="16" fill="#fff" stroke="#E2E8F0"/>
+  <rect x="853" y="378" width="216" height="102" rx="12" fill="#DCFCE7"/>
+  <circle cx="961" cy="429" r="31" fill="#BBF7D0"/>
+  <path d="m947 429 10 10 19-21" stroke="#15803D" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="855" y="509" fill="#0F172A" font-family="Arial,sans-serif" font-size="13" font-weight="700">Learning Foundations</text>
+  <text x="855" y="531" fill="#64748B" font-family="Arial,sans-serif" font-size="11">10 lessons  ·  5h 00m</text>
+  <rect x="855" y="548" width="212" height="7" rx="3.5" fill="#E2E8F0"/>
+  <rect x="855" y="548" width="72" height="7" rx="3.5" fill="#22C55E"/>
+</svg>

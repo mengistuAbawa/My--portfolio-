@@ -1,8 +1,12 @@
 import { NextResponse } from "next/server";
-import { COOKIE_NAME } from "@/lib/admin-auth";
+import { createSupabaseServerClient } from "@/lib/supabase-server";
 
 export async function POST() {
-  const response = NextResponse.json({ success: true });
-  response.cookies.set({ name: COOKIE_NAME, value: "", maxAge: 0, httpOnly: true, sameSite: "lax", path: "/" });
-  return response;
+  try {
+    const supabase = await createSupabaseServerClient();
+    await supabase.auth.signOut();
+  } catch {
+    // Clear local browser session even if Supabase is temporarily unavailable.
+  }
+  return NextResponse.json({ success: true });
 }

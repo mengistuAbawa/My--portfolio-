@@ -18,11 +18,11 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Admin uploads
 
-The `/upload` page requires the admin password configured as `ADMIN_PASSWORD`. The session cookie is signed with `ADMIN_SESSION_SECRET`. Keep both values in your local `.env` file or deployment environment settings; never commit them.
+Admin password and Google sign-in use Supabase Auth. Create a confirmed user for `mengistuabawa19@gmail.com` in the Supabase Dashboard under Authentication > Users and set its password there. Only that email can manage projects or upload the home image. The password is checked by Supabase Auth and is not stored in this repository or a Vercel environment variable.
 
-To enable Google sign-in, create an OAuth 2.0 web client in Google Cloud and set `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and (optionally) `GOOGLE_REDIRECT_URI`. Add `https://your-domain.example/api/admin/google/callback` as an authorized redirect URI. Only the verified account `mengistuabawa19@gmail.com` is accepted.
+Set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (or `NEXT_PUBLIC_SUPABASE_ANON_KEY`) in local `.env` and Vercel. To enable Google sign-in, enable the Google provider under Supabase Authentication > Sign In / Providers, configure its Google OAuth client, set the Supabase project's Site URL to your website, and allow `https://YOUR-VERCEL-DOMAIN/auth/callback` in Supabase's redirect URL list. In Google Cloud, use the callback URL shown in Supabase's Google provider settings.
 
-The home image is saved in the Prisma `SiteSetting` table. After deploying the schema change, run `npx prisma db push` against the configured database. Uploaded images are limited to 2 MB and stored as data URLs in that database.
+The home image is saved in the Prisma `SiteSetting` table. Uploaded images are limited to 2 MB and stored in the configured database.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
@@ -37,8 +37,19 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## GitHub and Vercel deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This repository is connected to `https://github.com/mengistuAbawa/Portfolio-.git`. Push the project to GitHub, then import that repository in Vercel. Vercel's Git integration creates Preview deployments for branch pushes and Production deployments from the configured production branch.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The local app uses SQLite for development. Vercel deployments use PostgreSQL because the local SQLite file is not persistent across serverless deployments. The Vercel build runs the checked-in Prisma migrations before building Next.js.
+
+### Before the first deployment
+
+1. Create a Supabase project. Set `DATABASE_URL` to the Supavisor transaction-pool URL (port `6543`) and `DIRECT_URL` to the direct or session-pool URL (port `5432`) in Vercel Production and Preview environments. Use separate databases for Preview and Production.
+2. Set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (or the project's anon key) in Vercel. These are Supabase's project URL and public client key.
+3. Create and confirm the admin user `mengistuabawa19@gmail.com` in Supabase Authentication > Users. Set the admin password there. The application no longer reads `ADMIN_PASSWORD` or `ADMIN_SESSION_SECRET`.
+4. Optionally configure the Google provider in Supabase Auth. Allow `https://YOUR-VERCEL-DOMAIN/auth/callback` in Supabase Auth redirect URLs and use Supabase's displayed callback URL in Google Cloud.
+5. Add optional SMTP variables (`SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`) if contact form messages should be emailed as well as stored.
+6. Import the GitHub repository in Vercel, set **Root Directory** to `portfolio`, and deploy. `vercel.json` selects `npm run build:vercel`, which applies `prisma/migrations` using `DIRECT_URL`, generates the PostgreSQL Prisma client, and builds the app. The regular `npm run build` remains available for the local SQLite setup.
+
+For local development, keep using the SQLite `DATABASE_URL` in `.env` and run `npm run dev`. Do not commit `.env` or `prisma/dev.db`.
